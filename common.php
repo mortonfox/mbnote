@@ -181,9 +181,10 @@ function edit_form($title, $subj, $cont, $cat, $notenum, $errormsg) {
 ?>
 <form action="savenote.php" method="post">
 <p>Subject:<br/>
-<input name="subject" emptyok="false" value="<?php print $subj; ?>"/></p>
+<input name="subject" maxlength="80" emptyok="false" value="<?php print $subj; ?>"/></p>
 <p>Content:<br/>
-<input name="content" emptyok="true" value="<?php print $cont; ?>"/></p>
+<textarea name="content" maxlength="255" emptyok="true" cols="<?php print PAGEWIDTH; ?>" rows="3"><?php print $cont; ?></textarea></p>
+<!-- <input name="content" maxlength="255" emptyok="true" value="<?php print $cont; ?>"/></p> -->
 <p>Category:<br/>
 <select name="category">
 
