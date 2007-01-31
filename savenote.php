@@ -29,6 +29,13 @@ else {
     }
     else {
 	$notes[] = $savednote;
+
+	$db = db_open();
+	if ($db) {
+	    db_savenote($db, null, $_POST["subject"], $_POST["content"],
+		$_POST["category"]);
+	    db_close();
+	}
     }
     write_db();
     unlock();

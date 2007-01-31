@@ -86,6 +86,167 @@ function page_login() {
 <?php
 }
 
+
+// ======================== SQLite Code =======================
+
+define('DBNAME', 'mbnote');
+define('DBTABLE', 'notes');
+define('MAXSUBJECT', 80);
+define('MAXCONTENT', 255);
+
+// Open database. Create table if necessary.
+function db_open()
+{
+    $db = sqlite_open(DBNAME, 0666, $sqlite_err);
+    if (!$db) {
+	print "Error opening database: $sqlite_err\n";
+	return false;
+    }
+
+    $result = sqlite_query($db, "PRAGMA table_info(" . DBTABLE . ")", 
+	SQLITE_BOTH, $sqlite_err);
+    if (!$result) {
+	print "Error getting table info: $sqlite_err\n";
+	return false;
+    }
+
+    if (sqlite_num_rows($result) > 0)
+	return $db;
+
+    // Table not found so create it.
+    $result = sqlite_query($db, "CREATE TABLE " . DBTABLE . 
+	"(" .
+	"key INTEGER PRIMARY KEY, " .
+	"subject VARCHAR(" . MAXSUBJECT . "), " . 
+	"content VARCHAR(" . MAXCONTENT . "), " . 
+	"category VARCHAR(20), " . 
+	"timestamp TIMESTAMP" .
+	")", 
+	SQLITE_BOTH, $sqlite_err
+    );
+    if (!$result) {
+	print "Error creating table: $sqlite_err\n";
+	return false;
+    }
+
+    return $db;
+} // db_open
+
+// Save a note. If $key is null then add a new row to the database.
+function db_savenote($db, $key, $subject, $content, $category) 
+{
+    if (is_null($key)) {
+	$result = sqlite_query($db, "INSERT INTO " . DBTABLE . 
+	    " (subject, content, category, timestamp) VALUES (" .
+	    "'" . sqlite_escape_string($subject) . "'," .
+	    "'" . sqlite_escape_string($content) . "'," .
+	    "'" . $category . "'," .
+	    time() . ")", 
+	    SQLITE_BOTH, $sqlite_err);
+	if (!$result) {
+	    print "Error saving note: $sqlite_err\n";
+	    return false;
+	}
+    }
+    else {
+	$result = sqlite_query($db, "UPDATE " . DBTABLE . " SET " .
+	    "subject = '" . sqlite_escape_string($subject) . "'," . 
+	    "content = '" . sqlite_escape_string($content) . "'," . 
+	    "category = '" . $category . "' " .
+	    "WHERE key = $key",
+	    SQLITE_BOTH, $sqlite_err);
+	if (!$result) {
+	    print "Error saving note: $sqlite_err\n";
+	    return false;
+	}
+    }
+}
+
+function db_close($db)
+{
+    sqlite_close($db);
+}
+
+// Get the note, given the key.
+function db_getnote($db, $key)
+{
+    $result = sqlite_query($db, "SELECT subject, content, category FROM " . 
+	DBTABLE . " WHERE key = $key", 
+	SQLITE_BOTH, $sqlite_err);
+    if (!$result) {
+	print "Error getting note: $sqlite_err\n";
+	return false;
+    }
+
+    $entry = sqlite_fetch_array($result);
+    if (!$entry) {
+	print "Can't find note key\n";
+	return false;
+    }
+
+    return array(
+	"subject" => $entry["subject"],
+	"content" => $entry["content"],
+	"category" => $entry["category"]);
+} // db_getnote
+
+function db_delnote($db, $key)
+{
+    $result = sqlite_query($db, "DELETE FROM " . DBTABLE . " WHERE key = $key",
+	SQLITE_BOTH, $sqlite_err);
+    if (!$result) {
+	print "Error deleting note: $sqlite_err\n";
+	return false;
+    }
+    return $result;
+} // db_delnote
+
+function db_select($db, $cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpages)
+{
+    $cond = array();
+
+    if ($cat != "") {
+	$cond[] = "category = '" . $cat . "'";
+    }
+
+    if ($search != "") {
+	$cond[] = "(subject LIKE '%" . $search . "%' OR content LIKE '%" . $search . "%')";
+    }
+
+    $result = sqlite_query($db, "SELECT key, subject FROM " . 
+	DBTABLE . " WHERE " . implode(" AND ", $cond) .
+	" ORDER BY timestamp DESC", 
+	SQLITE_BOTH, $sqlite_err);
+    if (!$result) {
+	print "Error getting note: $sqlite_err\n";
+	return false;
+    }
+
+    $numpages = floor((sqlite_num_rows($result) + PAGELEN - 1) / PAGELEN);
+
+    // Sanity check for the page number.
+    if ($pagenum < 0 || $pagenum >= $numpages)
+	$pagenum = 0;
+
+    sqlite_seek($result, $pagenum * PAGELEN);
+    $data = array();
+
+    for ($i = 0; $i < PAGELEN && ($entry = sqlite_fetch_array($result)); ++$i) {
+	$data[] = array(
+	    "key" => $entry["key"],
+	    "subject" => $entry["subject"]
+	);
+    }
+
+    return $data;
+} // db_select
+ 
+
+// ======================== End of SQLite Code ================
+
+
+// ======================== Database Code =====================
+
 define('DBFILE', 'notes.txt');
 
 // fields: subject, content, category, timestamp
@@ -150,6 +311,8 @@ function unlock() {
     }
 }
 
+// ==================== End of Database Code =================
+
 // Generic routine that displays a message and sends the user back to the 
 // main menu.
 function to_main($msg, $linkmsg) {
@@ -181,9 +344,9 @@ function edit_form($title, $subj, $cont, $cat, $notenum, $errormsg) {
 ?>
 <form action="savenote.php" method="post">
 <p>Subject:<br/>
-<input name="subject" maxlength="80" emptyok="false" value="<?php print $subj; ?>"/></p>
+<input name="subject" maxlength="<?php print MAXSUBJECT; ?>" emptyok="false" value="<?php print $subj; ?>"/></p>
 <p>Content:<br/>
-<textarea name="content" maxlength="255" emptyok="true" cols="<?php print PAGEWIDTH; ?>" rows="3"><?php print $cont; ?></textarea></p>
+<textarea name="content" maxlength="<?php print MAXCONTENT; ?>" emptyok="true" cols="<?php print PAGEWIDTH; ?>" rows="3"><?php print $cont; ?></textarea></p>
 <!-- <input name="content" maxlength="255" emptyok="true" value="<?php print $cont; ?>"/></p> -->
 <p>Category:<br/>
 <select name="category">
@@ -260,7 +423,7 @@ function select_notes($cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpage
     return $output;
 }
 
-define(PAGEWIDTH, 15);
+define('PAGEWIDTH', 15);
 
 function show_subject($subj) {
     if (strlen($subj) > PAGEWIDTH)
