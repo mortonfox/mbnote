@@ -26,7 +26,9 @@ else {
 	    $_POST["content"],
 	    $_POST["category"])
 	) {
-	    $notenum = isset($_POST["notenum"]) ? 0 + $_POST["notenum"] : sqlite_last_insert_rowid($db);
+	    $notenum = isset($_POST["notenum"]) ? 
+		0 + $_POST["notenum"] : 
+		sqlite_last_insert_rowid($db);
 	    view_note($notenum);
 	}
 	else {

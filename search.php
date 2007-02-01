@@ -4,7 +4,7 @@ page_begin();
 page_header();
 check_session();
 
-read_db();
+// read_db();
 
 if (!isset($_POST["search"]) && isset($_GET["search"]))
     $_POST["search"] = $_GET["search"];

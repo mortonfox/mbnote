@@ -256,11 +256,12 @@ function db_select($db, $cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpa
 
 // ======================== Database Code =====================
 
-define('DBFILE', 'notes.txt');
+// define('DBFILE', 'notes.txt');
 
 // fields: subject, content, category, timestamp
 
 // Read the entire database into memory.
+/*
 function read_db() {
     global $notes;
     $notes = array();
@@ -280,8 +281,10 @@ function read_db() {
 	fclose($hndl);
     }
 }
+ */
 
 // Write the entire database out to the file.
+/*
 function write_db() {
     global $notes;
     $hndl = fopen(DBFILE, "w");
@@ -297,11 +300,15 @@ function write_db() {
 	fclose($hndl);
     }
 }
+ */
 
+/*
 define('LOCKFILE', "mbnote.lck");
 $lockhndl = false;
+ */
 
 // Lock the semaphore file to control access to the database.
+/*
 function lock() {
     global $lockhndl;
     $lockhndl = fopen(LOCKFILE, "w");
@@ -309,8 +316,10 @@ function lock() {
 	flock($lockhndl, LOCK_EX);
     }
 }
+ */
 
 // Unlock the semaphore file.
+/*
 function unlock() {
     global $lockhndl;
     if ($lockhndl) {
@@ -319,6 +328,7 @@ function unlock() {
 	$lockhndl = false;
     }
 }
+ */
 
 // ==================== End of Database Code =================
 
@@ -435,6 +445,7 @@ define('PAGELEN', 10);
 
 // Generalized select function for getting a list of notes from the 
 // database.
+/*
 function select_notes($cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpages) {
     global $notes;
 
@@ -478,6 +489,7 @@ function select_notes($cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpage
 
     return $output;
 }
+ */
 
 define('PAGEWIDTH', 15);
 
