@@ -114,7 +114,7 @@ function db_open()
 	return $db;
 
     // Table not found so create it.
-    $result = sqlite_query($db, "CREATE TABLE " . DBTABLE . 
+    $result = sqlite_exec($db, "CREATE TABLE " . DBTABLE . 
 	"(" .
 	"key INTEGER PRIMARY KEY, " .
 	"subject VARCHAR(" . MAXSUBJECT . "), " . 
@@ -122,7 +122,7 @@ function db_open()
 	"category VARCHAR(20), " . 
 	"timestamp TIMESTAMP" .
 	")", 
-	SQLITE_BOTH, $sqlite_err
+	$sqlite_err
     );
     if (!$result) {
 	print "Error creating table: $sqlite_err\n";
@@ -136,31 +136,31 @@ function db_open()
 function db_savenote($db, $key, $subject, $content, $category) 
 {
     if (is_null($key)) {
-	$result = sqlite_query($db, "INSERT INTO " . DBTABLE . 
+	$result = sqlite_exec($db, "INSERT INTO " . DBTABLE . 
 	    " (subject, content, category, timestamp) VALUES (" .
 	    "'" . sqlite_escape_string($subject) . "'," .
 	    "'" . sqlite_escape_string($content) . "'," .
 	    "'" . $category . "'," .
 	    time() . ")", 
-	    SQLITE_BOTH, $sqlite_err);
+	    $sqlite_err);
 	if (!$result) {
 	    print "Error saving note: $sqlite_err\n";
 	    return false;
 	}
     }
     else {
-	$result = sqlite_query($db, "UPDATE " . DBTABLE . " SET " .
+	$result = sqlite_exec($db, "UPDATE " . DBTABLE . " SET " .
 	    "subject = '" . sqlite_escape_string($subject) . "'," . 
 	    "content = '" . sqlite_escape_string($content) . "'," . 
 	    "category = '" . $category . "' " .
 	    "WHERE key = $key",
-	    SQLITE_BOTH, $sqlite_err);
+	    $sqlite_err);
 	if (!$result) {
 	    print "Error saving note: $sqlite_err\n";
 	    return false;
 	}
     }
-}
+} // db_savenote
 
 function db_close($db)
 {
@@ -184,16 +184,13 @@ function db_getnote($db, $key)
 	return false;
     }
 
-    return array(
-	"subject" => $entry["subject"],
-	"content" => $entry["content"],
-	"category" => $entry["category"]);
+    return $entry;
 } // db_getnote
 
 function db_delnote($db, $key)
 {
-    $result = sqlite_query($db, "DELETE FROM " . DBTABLE . " WHERE key = $key",
-	SQLITE_BOTH, $sqlite_err);
+    $result = sqlite_exec($db, "DELETE FROM " . DBTABLE . " WHERE key = $key",
+	$sqlite_err);
     if (!$result) {
 	print "Error deleting note: $sqlite_err\n";
 	return false;
@@ -210,7 +207,8 @@ function db_select($db, $cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpa
     }
 
     if ($search != "") {
-	$cond[] = "(subject LIKE '%" . $search . "%' OR content LIKE '%" . $search . "%')";
+	$cond[] = "(subject LIKE '%" . sqlite_escape_string($search) .
+	    "%' OR content LIKE '%" . sqlite_escape_string($search) . "%')";
     }
 
     $result = sqlite_query($db, "SELECT key, subject FROM " . 
@@ -218,7 +216,7 @@ function db_select($db, $cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpa
 	" ORDER BY timestamp DESC", 
 	SQLITE_BOTH, $sqlite_err);
     if (!$result) {
-	print "Error getting note: $sqlite_err\n";
+	print "Error retrieving notes: $sqlite_err\n";
 	return false;
     }
 
@@ -228,15 +226,19 @@ function db_select($db, $cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpa
     if ($pagenum < 0 || $pagenum >= $numpages)
 	$pagenum = 0;
 
-    sqlite_seek($result, $pagenum * PAGELEN);
-    $data = array();
+    $nextpage = -1;
+    if ($pagenum < $numpages - 1)
+	$nextpage = $pagenum + 1;
 
-    for ($i = 0; $i < PAGELEN && ($entry = sqlite_fetch_array($result)); ++$i) {
-	$data[] = array(
-	    "key" => $entry["key"],
-	    "subject" => $entry["subject"]
-	);
-    }
+    $prevpage = -1;
+    if ($pagenum > 0)
+	$prevpage = $pagenum - 1;
+
+    sqlite_seek($result, $pagenum * PAGELEN);
+
+    $data = array();
+    for ($i = 0; $i < PAGELEN && ($entry = sqlite_fetch_array($result)); ++$i)
+	$data[] = $entry;
 
     return $data;
 } // db_select
