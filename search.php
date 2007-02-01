@@ -24,6 +24,36 @@ else {
 
 <?php
     $pagenum = isset($_POST["pagenum"]) ? $_POST["pagenum"] + 0 : 0;
+
+    $db = db_open();
+    if ($db) {
+	$notelist = db_select($db, "", $_POST["search"], $pagenum, $nextpage, $prevpage, $numpages);
+	if ($notelist && count($notelist) > 0) {
+	    for ($i = 0; $i < count($notelist); ++$i) {
+		$key = $notelist[$i]["key"];
+		$subj = show_subject($notelist[$i]["subject"]);
+		print "<a href=\"viewnote.php?notenum=$key\">$subj</a><br/>\n";
+	    }
+	    if ($nextpage >= 0 || $prevpage >= 0) {
+		$page = $pagenum + 1;
+		print "<br/>Page $page of $numpages<br/>";
+		if ($nextpage >= 0)
+		    print "<a href=\"search.php?pagenum=$nextpage&search=" . urlencode($_POST["search"]) . "\">Next page</a><br/>\n";
+		if ($prevpage >= 0)
+		    print "<a href=\"search.php?pagenum=$prevpage&search=" . urlencode($_POST["search"]) . "\">Prev page</a><br/>\n";
+	    }
+	}
+	else {
+	    print "<i>No notes found.</i><br/>";
+	}
+
+	db_close($db);
+    }
+    else {
+	print "<i>Could not open database.</i><br/>";
+    }
+
+/*
     $indices = select_notes("", $_POST["search"], $pagenum, $nextpage, $prevpage, $numpages);
 
     if (count($indices) == 0) {
@@ -44,6 +74,7 @@ else {
 		print "<a href=\"search.php?pagenum=$prevpage&search=" . urlencode($_POST["search"]) . "\">Prev page</a><br/>\n";
 	}
     }
+ */
 ?>
 
 <br/>          
