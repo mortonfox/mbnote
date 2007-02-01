@@ -45,6 +45,7 @@ else {
 	}
 	else {
 	    print "<i>No notes found.</i><br/>";
+	    search_form();
 	}
 
 	db_close($db);

@@ -372,6 +372,19 @@ function view_note($notenum)
     }
 } // view_note
 
+// Display a form for searching for notes.
+function search_form() 
+{
+?>
+<form action="search.php" method="post">
+<p>Enter a keyword to look for in the notes:<br/>
+<input name="search"/>
+</p>
+<p><input type="submit" value="Search"/></p>
+</form>
+<?php
+}
+
 // Display a form for editing a note with the fields optionally filled in.
 // If notenum is less than zero then the note will be saved as a new note. 
 // Otherwise, the note will be saved as an existing note.
