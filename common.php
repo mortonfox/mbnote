@@ -211,8 +211,12 @@ function db_select($db, $cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpa
 	    "%' OR content LIKE '%" . sqlite_escape_string($search) . "%')";
     }
 
+    $where = "";
+    if (count($cond) > 0)
+	$where = " WHERE " . implode(" AND ", $cond) . " ";
+
     $result = sqlite_query($db, "SELECT key, subject FROM " . 
-	DBTABLE . " WHERE " . implode(" AND ", $cond) .
+	DBTABLE . $where .
 	" ORDER BY timestamp DESC", 
 	SQLITE_BOTH, $sqlite_err);
     if (!$result) {
@@ -372,12 +376,12 @@ function edit_form($title, $subj, $cont, $cat, $notenum, $errormsg) {
 </p>
 <p><br/><input type="submit" value="Save note"/></p>
 </form>
-<p><a href="main.php">Cancel</a></p>
+<p><a href="<?php if ($notenum >= 0) print "viewnote.php?notenum=$notenum" ; else print "main.php"; ?>">Cancel</a></p>
 </body> 
 <?php
 }
 
-define(PAGELEN, 10);
+define('PAGELEN', 10);
 
 // Generalized select function for getting a list of notes from the 
 // database.
