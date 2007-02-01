@@ -147,6 +147,7 @@ function db_savenote($db, $key, $subject, $content, $category)
 	    print "Error saving note: $sqlite_err\n";
 	    return false;
 	}
+	return $result;
     }
     else {
 	$result = sqlite_exec($db, "UPDATE " . DBTABLE . " SET " .
@@ -159,6 +160,7 @@ function db_savenote($db, $key, $subject, $content, $category)
 	    print "Error saving note: $sqlite_err\n";
 	    return false;
 	}
+	return $result;
     }
 } // db_savenote
 
@@ -238,7 +240,8 @@ function db_select($db, $cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpa
     if ($pagenum > 0)
 	$prevpage = $pagenum - 1;
 
-    sqlite_seek($result, $pagenum * PAGELEN);
+    if ($numpages > 0)
+	sqlite_seek($result, $pagenum * PAGELEN);
 
     $data = array();
     for ($i = 0; $i < PAGELEN && ($entry = sqlite_fetch_array($result)); ++$i)
