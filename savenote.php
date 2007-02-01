@@ -27,15 +27,7 @@ else {
 	    $_POST["category"])
 	) {
 	    $notenum = isset($_POST["notenum"]) ? 0 + $_POST["notenum"] : sqlite_last_insert_rowid($db);
-	    $viewurl = "viewnote.php?notenum=$notenum";
-
-	    page_head("Note saved", $viewurl);
-?>
-<body>
-<p>Note saved.</p>
-<p><a href="<?php print $viewurl; ?>">Return to note</a></p>
-</body>
-<?php
+	    view_note($notenum);
 	}
 	else {
 	    return_to_main("Could not save note.");

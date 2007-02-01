@@ -338,6 +338,40 @@ function return_to_main($msg) {
     to_main($msg, "Return to main menu");
 }
 
+function view_note($notenum)
+{
+    $notenum = 0 + $notenum;
+    $db = db_open();
+    if ($db) {
+	$note = db_getnote($db, $notenum);
+	if ($note) {
+	    page_head("NB: View note", "");
+?>
+<body>
+<p><b>Notebook: View note</b></p>
+<p><b>Subject:</b><br/>
+<?php print htmlspecialchars($note["subject"]); ?></p>
+<p><b>Content:</b><br/>     
+<?php print htmlspecialchars($note["content"]); ?></p>
+<p><b>Category:</b> <?php print check_category($note["category"]); ?></p>
+<p><br/>
+<a href="editnote.php?notenum=<?php print $notenum; ?>">Edit</a><br/>
+<a href="pdel.php?notenum=<?php print $notenum; ?>">Delete</a><br/>
+<a href="main.php">Return to main menu</a><br/>
+</p>
+</body> 
+<?php
+	}
+	else {
+	    return_to_main("Note not found.");
+	}
+	db_close($db);
+    }
+    else {
+	return_to_main("Could not open database.");
+    }
+} // view_note
+
 // Display a form for editing a note with the fields optionally filled in.
 // If notenum is less than zero then the note will be saved as a new note. 
 // Otherwise, the note will be saved as an existing note.
