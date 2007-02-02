@@ -4,7 +4,6 @@ page_begin();
 page_header();
 check_session();
 
-// read_db();
 
 // To handle non-post links from the main menu.
 if (!isset($_POST["category"]) && isset($_GET["category"]))
@@ -57,30 +56,6 @@ else {
     print "<i>Could not open database.</i><br/>";
 }
 
-/*
-$indices = select_notes($cat, "", $pagenum, $nextpage, $prevpage, $numpages);
-
-if (count($indices) == 0) {
-    print "<i>No notes found.</i><br/>";
-}
-else {
-    for ($i = 0; $i < count($indices); ++$i) {
-	$indx = $indices[$i];
-	$fields = $notes[$indx];
-	print "<a href=\"viewnote.php?notenum=$indx\">" . show_subject($fields["subject"]) . "</a><br/>\n";
-    }
-
-    if ($nextpage >= 0 || $prevpage >= 0) {
-	$page = $pagenum + 1;
-	print "<br/>Page $page of $numpages<br/>";
-	$catparam = ($cat != "") ? "category=$cat&" : "";
-	if ($nextpage >= 0)
-	    print "<a href=\"listnotes.php?${catparam}pagenum=$nextpage\">Next page</a><br/>\n";
-	if ($prevpage >= 0)
-	    print "<a href=\"listnotes.php?${catparam}pagenum=$prevpage\">Prev page</a><br/>\n";
-    }
-}
- */
 ?>
 
 <br/>          

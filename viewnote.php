@@ -4,7 +4,6 @@ page_begin();
 page_header();
 check_session();
 
-// read_db();
 
 // To handle non-post links from the main menu.
 if (!isset($_POST["notenum"]) && isset($_GET["notenum"]))

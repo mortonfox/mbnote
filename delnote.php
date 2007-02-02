@@ -4,8 +4,6 @@ page_begin();
 page_header();
 check_session();
 
-// lock();
-// read_db();
 
 // To handle non-post links from the main menu.
 if (!isset($_POST["notenum"]) && isset($_GET["notenum"]))
@@ -29,18 +27,8 @@ else {
     else {
 	return_to_main("Could not open database.");
     }
-    /*
-    $notes[$_POST["notenum"]] = array(
-	    "subject"=>"",
-	    "content"=>"",
-	    "category"=>"",
-	    "timestamp"=>0);
-    write_db();
-    return_to_main("Note deleted.");
-     */
 }
 
-// unlock();
 
 page_end();
 ?>

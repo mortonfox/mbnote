@@ -4,7 +4,6 @@ page_begin();
 page_header();
 check_session();
 
-// read_db();
 
 if (!isset($_POST["search"]) && isset($_GET["search"]))
     $_POST["search"] = $_GET["search"];
@@ -54,30 +53,10 @@ else {
 	print "<i>Could not open database.</i><br/>";
     }
 
-/*
-    $indices = select_notes("", $_POST["search"], $pagenum, $nextpage, $prevpage, $numpages);
-
-    if (count($indices) == 0) {
-	print "<i>No notes found.</i><br/>";
-    }
-    else {
-	for ($i = 0; $i < count($indices); ++$i) {
-	    $indx = $indices[$i];
-	    $fields = $notes[$indx];
-	    print "<a href=\"viewnote.php?notenum=$indx\">" . show_subject($fields["subject"]) . "</a><br/>\n";
-	}
-	if ($nextpage >= 0 || $prevpage >= 0) {
-	    $page = $pagenum + 1;
-	    print "<br/>Page $page of $numpages<br/>";
-	    if ($nextpage >= 0)
-		print "<a href=\"search.php?pagenum=$nextpage&search=" . urlencode($_POST["search"]) . "\">Next page</a><br/>\n";
-	    if ($prevpage >= 0)
-		print "<a href=\"search.php?pagenum=$prevpage&search=" . urlencode($_POST["search"]) . "\">Prev page</a><br/>\n";
-	}
-    }
- */
 ?>
 
+<br/>          
+<a href="psearch.php">Search again</a>
 <br/>          
 <a href="main.php">Return to main menu</a>
 </p>

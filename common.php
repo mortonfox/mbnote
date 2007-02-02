@@ -1,9 +1,29 @@
 <?php
+
+// For SQLite
+define('DBNAME', 'mbnote');
+define('DBTABLE', 'notes');
+
+// Max length of subject field.
+define('MAXSUBJECT', 80);
+
+// Max length of content field.
+define('MAXCONTENT', 255);
+
+// How many notes to show per page in a list of notes.
+define('PAGELEN', 10);
+
+// Assumed screen width for subject line truncation.
+define('PAGEWIDTH', 15);
+
+
 function page_begin() {
     ob_start();
 
     // Mime type negotiation. Either of the two xhtml forms should be 
     // acceptable but you never know.
+    // It turns out that application/vnd.wap.xhtml+xml is not reliable. The 
+    // phone says it takes this MIME type but it actually does not.
 //    if (stripos($_SERVER['HTTP_ACCEPT'], "application/vnd.wap.xhtml+xml") !== false)
 //	header("Content-type: application/vnd.wap.xhtml+xml");
     if (stripos($_SERVER['HTTP_ACCEPT'], "application/xhtml+xml") !== false)
@@ -88,11 +108,6 @@ function page_login() {
 
 
 // ======================== SQLite Code =======================
-
-define('DBNAME', 'mbnote');
-define('DBTABLE', 'notes');
-define('MAXSUBJECT', 80);
-define('MAXCONTENT', 255);
 
 // Open database. Create table if necessary.
 function db_open()
@@ -254,84 +269,6 @@ function db_select($db, $cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpa
 // ======================== End of SQLite Code ================
 
 
-// ======================== Database Code =====================
-
-// define('DBFILE', 'notes.txt');
-
-// fields: subject, content, category, timestamp
-
-// Read the entire database into memory.
-/*
-function read_db() {
-    global $notes;
-    $notes = array();
-    $hndl = @fopen(DBFILE, "r");
-    if ($hndl) {
-	while (!feof($hndl)) {
-	    $line = chop(fgets($hndl));
-	    if ($line != "") {
-		$fields = explode(",", $line);
-		$notes[] = array(
-		    "subject"=>urldecode($fields[0]),
-		    "content"=>urldecode($fields[1]),
-		    "category"=>$fields[2],
-		    "timestamp"=>$fields[3]);
-	    }
-	}
-	fclose($hndl);
-    }
-}
- */
-
-// Write the entire database out to the file.
-/*
-function write_db() {
-    global $notes;
-    $hndl = fopen(DBFILE, "w");
-    if ($hndl) {
-	for ($i = 0; $i < count($notes); $i++) {
-	    $fields = $notes[$i];
-	    fprintf($hndl, "%s,%s,%s,%d\n",
-		urlencode($fields["subject"]), 
-		urlencode($fields["content"]), 
-		$fields["category"], 
-		$fields["timestamp"]);
-	}
-	fclose($hndl);
-    }
-}
- */
-
-/*
-define('LOCKFILE', "mbnote.lck");
-$lockhndl = false;
- */
-
-// Lock the semaphore file to control access to the database.
-/*
-function lock() {
-    global $lockhndl;
-    $lockhndl = fopen(LOCKFILE, "w");
-    if ($lockhndl) {
-	flock($lockhndl, LOCK_EX);
-    }
-}
- */
-
-// Unlock the semaphore file.
-/*
-function unlock() {
-    global $lockhndl;
-    if ($lockhndl) {
-	flock($lockhndl, LOCK_UN);
-	fclose($lockhndl);
-	$lockhndl = false;
-    }
-}
- */
-
-// ==================== End of Database Code =================
-
 // Generic routine that displays a message and sends the user back to the 
 // main menu.
 function to_main($msg, $linkmsg) {
@@ -348,6 +285,7 @@ function return_to_main($msg) {
     to_main($msg, "Return to main menu");
 }
 
+// Display a note.
 function view_note($notenum)
 {
     $notenum = 0 + $notenum;
@@ -436,62 +374,10 @@ function edit_form($title, $subj, $cont, $cat, $notenum, $errormsg) {
 </p>
 <p><br/><input type="submit" value="Save note"/></p>
 </form>
-<p><a href="<?php if ($notenum >= 0) print "viewnote.php?notenum=$notenum" ; else print "main.php"; ?>">Cancel</a></p>
+<p><a href="<?php print ($notenum >= 0) ? "viewnote.php?notenum=$notenum" : "main.php"; ?>">Cancel</a></p>
 </body> 
 <?php
 }
-
-define('PAGELEN', 10);
-
-// Generalized select function for getting a list of notes from the 
-// database.
-/*
-function select_notes($cat, $search, $pagenum, &$nextpage, &$prevpage, &$numpages) {
-    global $notes;
-
-    // Search from end to beginning so that the latest notes show up first.
-    for ($i = count($notes) - 1; $i >= 0; $i--) {
-	$fields = $notes[$i];
-
-	// Skip over deleted notes.
-	if ($fields["subject"] == "")
-	    continue;
-
-	// Do a category search if category is specified.
-	if ($cat != "" && $fields["category"] != $cat)
-	    continue;
-
-	// Check for the search keyword in both the subject and content 
-	// fields if a search keyword is specified.
-	if ($search != "" && 
-	    stripos($fields["subject"], $search) === false &&
-	    stripos($fields["content"], $search) === false)
-	    continue;
-
-	$indices[] = $i;
-    }
-
-    $numpages = floor((count($indices) + PAGELEN - 1) / PAGELEN);
-
-    // Sanity check for the page number.
-    if ($pagenum < 0 || $pagenum >= $numpages)
-	$pagenum = 0;
-
-    $output = array_slice($indices, $pagenum * PAGELEN, PAGELEN);
-
-    $nextpage = -1;
-    if ($pagenum < $numpages - 1)
-	$nextpage = $pagenum + 1;
-
-    $prevpage = -1;
-    if ($pagenum > 0)
-	$prevpage = $pagenum - 1;
-
-    return $output;
-}
- */
-
-define('PAGEWIDTH', 15);
 
 function show_subject($subj) {
     if (strlen($subj) > PAGEWIDTH)

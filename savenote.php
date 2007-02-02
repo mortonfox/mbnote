@@ -26,6 +26,7 @@ else {
 	    $_POST["content"],
 	    $_POST["category"])
 	) {
+	    // After saving, redisplay the note.
 	    $notenum = isset($_POST["notenum"]) ? 
 		0 + $_POST["notenum"] : 
 		sqlite_last_insert_rowid($db);
@@ -40,33 +41,6 @@ else {
     else {
 	return_to_main("Could not open database.");
     }
-    /*
-    lock();
-    read_db();
-    $savednote = array(
-	"subject"=>$_POST["subject"],
-	"content"=>$_POST["content"],
-	"category"=>$_POST["category"],
-	"timestamp"=>time());
-    if (isset($_POST["notenum"])) {
-	$notes[$_POST["notenum"]] = $savednote;
-    }
-    else {
-	$notes[] = $savednote;
-
-	$db = db_open();
-	if ($db) {
-	    db_savenote($db, null, $_POST["subject"], $_POST["content"],
-		$_POST["category"]);
-	    db_close($db);
-	}
-	else {
-	    return_to_main("Could not open database.");
-	}
-    }
-    write_db();
-    unlock();
-     */
 }
 
 page_end();
