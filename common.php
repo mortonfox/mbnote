@@ -100,7 +100,7 @@ function page_login() {
 <input type="hidden" name="userid" value="g"/></p>
 <p>Password:<br/>
 <input type="password" name="password"/></p>
-<p><input accesskey="#" type="submit" value="# Login"/></p>
+<p><input type="submit" value="Login"/></p>
 </form>
 </body>
 <?php
@@ -327,7 +327,7 @@ function search_form()
 <form action="search.php" method="post">
 <p><input name="search"/>
 </p>
-<p><input accesskey="#" type="submit" value="# Search"/></p>
+<p><input type="submit" value="Search"/></p>
 </form>
 <?php
 }
@@ -370,7 +370,7 @@ function edit_form($title, $subj, $cont, $cat, $notenum, $errormsg) {
 	print "<input type=\"hidden\" name=\"notenum\" value=\"$notenum\"/>";
 ?>
 </p>
-<p><input accesskey="#" type="submit" value="# Save note"/></p>
+<p><input type="submit" value="Save note"/></p>
 </form>
 <p><a accesskey="1" href="<?php print ($notenum >= 0) ? "viewnote.php?notenum=$notenum" : "main.php"; ?>">1. Cancel</a></p>
 </body> 
