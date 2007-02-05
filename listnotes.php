@@ -39,7 +39,7 @@ if ($db) {
 	if ($nextpage >= 0 || $prevpage >= 0) {
 	    $page = $pagenum + 1;
 	    print "<br/>Page $page of $numpages<br/>";
-	    $catparam = ($cat != "") ? "category=$cat&" : "";
+	    $catparam = ($cat != "") ? "category=$cat&amp;" : "";
 	    if ($nextpage >= 0)
 		print "<a href=\"listnotes.php?${catparam}pagenum=$nextpage\">Next page</a><br/>\n";
 	    if ($prevpage >= 0)
