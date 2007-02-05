@@ -35,7 +35,7 @@ else {
 	    }
 	    if ($nextpage >= 0 || $prevpage >= 0) {
 		$page = $pagenum + 1;
-		print "<br/>Page $page of $numpages<br/>";
+		print "Page $page of $numpages<br/>";
 		if ($nextpage >= 0)
 		    print "<a href=\"search.php?pagenum=$nextpage&amp;search=" . urlencode($_POST["search"]) . "\">Next page</a><br/>\n";
 		if ($prevpage >= 0)
