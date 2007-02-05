@@ -41,9 +41,9 @@ if ($db) {
 	    print "Page $page of $numpages<br/>";
 	    $catparam = ($cat != "") ? "category=$cat&amp;" : "";
 	    if ($nextpage >= 0)
-		print "<a href=\"listnotes.php?${catparam}pagenum=$nextpage\">Next page</a><br/>\n";
+		print "<a accesskey=\"1\" href=\"listnotes.php?${catparam}pagenum=$nextpage\">1. Next page</a><br/>\n";
 	    if ($prevpage >= 0)
-		print "<a href=\"listnotes.php?${catparam}pagenum=$prevpage\">Prev page</a><br/>\n";
+		print "<a accesskey=\"2\" href=\"listnotes.php?${catparam}pagenum=$prevpage\">2. Prev page</a><br/>\n";
 	}
     }
     else {
@@ -58,7 +58,8 @@ else {
 
 ?>
 
-<a href="main.php">Return to main menu</a></p>
+<a accesskey="0" href="main.php">0. Main menu</a>
+</p>
 </body> 
 
 <?php

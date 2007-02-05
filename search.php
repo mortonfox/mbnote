@@ -37,9 +37,9 @@ else {
 		$page = $pagenum + 1;
 		print "Page $page of $numpages<br/>";
 		if ($nextpage >= 0)
-		    print "<a href=\"search.php?pagenum=$nextpage&amp;search=" . urlencode($_POST["search"]) . "\">Next page</a><br/>\n";
+		    print "<a accesskey=\"1\" href=\"search.php?pagenum=$nextpage&amp;search=" . urlencode($_POST["search"]) . "\">1. Next page</a><br/>\n";
 		if ($prevpage >= 0)
-		    print "<a href=\"search.php?pagenum=$prevpage&amp;search=" . urlencode($_POST["search"]) . "\">Prev page</a><br/>\n";
+		    print "<a accesskey=\"2\" href=\"search.php?pagenum=$prevpage&amp;search=" . urlencode($_POST["search"]) . "\">2. Prev page</a><br/>\n";
 	    }
 	}
 	else {
@@ -55,9 +55,9 @@ else {
 
 ?>
 
-<a href="psearch.php">Search again</a>
+<a accesskey="3" href="psearch.php">3. Search again</a>
 <br/>          
-<a href="main.php">Return to main menu</a>
+<a accesskey="0" href="main.php">0. Main menu</a>
 </p>
 </body> 
 

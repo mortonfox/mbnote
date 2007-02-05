@@ -100,7 +100,7 @@ function page_login() {
 <input name="userid"/></p>
 <p>Password:<br/>
 <input type="password" name="password"/></p>
-<p><input type="submit" value="Login"/></p>
+<p><input accesskey="#" type="submit" value="# Login"/></p>
 </form>
 </body>
 <?php
@@ -276,13 +276,13 @@ function to_main($msg, $linkmsg) {
 ?>
 <body>
 <p><?php print $msg;?></p>
-<p><a href="main.php"><?php print $linkmsg;?></a></p>
+<p><a accesskey="0" href="main.php"><?php print $linkmsg;?></a></p>
 </body>
 <?php
 }
 
 function return_to_main($msg) {
-    to_main($msg, "Return to main menu");
+    to_main($msg, "0. Main menu");
 }
 
 // Display a note.
@@ -303,9 +303,9 @@ function view_note($notenum)
 <?php print htmlspecialchars($note["content"]); ?></p>
 <p><b>Category:</b> <?php print check_category($note["category"]); ?></p>
 <p>
-<a href="editnote.php?notenum=<?php print $notenum; ?>">Edit</a><br/>
+<a accesskey="1" href="editnote.php?notenum=<?php print $notenum; ?>">1. Edit</a><br/>
 <a href="pdel.php?notenum=<?php print $notenum; ?>">Delete</a><br/>
-<a href="main.php">Return to main menu</a><br/>
+<a accesskey="0" href="main.php">0. Main menu</a>
 </p>
 </body> 
 <?php
@@ -325,10 +325,9 @@ function search_form()
 {
 ?>
 <form action="search.php" method="post">
-<p>Enter a keyword to look for in the notes:<br/>
-<input name="search"/>
+<p><input name="search"/>
 </p>
-<p><input type="submit" value="Search"/></p>
+<p><input accesskey="#" type="submit" value="# Search"/></p>
 </form>
 <?php
 }
@@ -371,9 +370,9 @@ function edit_form($title, $subj, $cont, $cat, $notenum, $errormsg) {
 	print "<input type=\"hidden\" name=\"notenum\" value=\"$notenum\"/>";
 ?>
 </p>
-<p><input type="submit" value="Save note"/></p>
+<p><input accesskey="#" type="submit" value="# Save note"/></p>
 </form>
-<p><a href="<?php print ($notenum >= 0) ? "viewnote.php?notenum=$notenum" : "main.php"; ?>">Cancel</a></p>
+<p><a accesskey="1" href="<?php print ($notenum >= 0) ? "viewnote.php?notenum=$notenum" : "main.php"; ?>">1. Cancel</a></p>
 </body> 
 <?php
 }
