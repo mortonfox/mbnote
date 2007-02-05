@@ -19,7 +19,7 @@ else {
 ?>
 <body>
 <p><b>Notebook: Search results</b></p>
-<p>Select a note to view, edit, or delete it:<br/>
+<p>
 
 <?php
     $pagenum = isset($_POST["pagenum"]) ? $_POST["pagenum"] + 0 : 0;

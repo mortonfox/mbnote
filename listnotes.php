@@ -15,15 +15,16 @@ if (isset($_POST["category"]))
 if (!isset($_POST["pagenum"]) && isset($_GET["pagenum"]))
     $_POST["pagenum"] = $_GET["pagenum"];
 
+$cat = isset($_POST["category"]) ? $_POST["category"] : "";
+
 page_head("NB: List notes", "");
 ?>
 
 <body>
-<p><b>Notebook: List notes <?php if (isset($_POST["category"])) print "in category <i>" . $_POST["category"] . "</i>";?></b></p>
-<p>Select a note to view, edit, or delete it:<br/>
+<p><b>Notebook: <?php print isset($_POST["category"]) ? "Category <i>$cat</i>" : "List notes";?></b></p>
+<p>
 <?php
 
-$cat = isset($_POST["category"]) ? $_POST["category"] : "";
 $pagenum = isset($_POST["pagenum"]) ? $_POST["pagenum"] + 0 : 0;
 
 $db = db_open();

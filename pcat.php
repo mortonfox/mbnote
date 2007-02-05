@@ -8,7 +8,6 @@ page_head("NB: Categories", "");
 ?>
 <body>
 <p><b>Notebook: Categories</b></p>
-<p>Choose a category to list notes in that category:</p>
 <p>
 <?php
     for ($i = 0; $i < count($catnames); ++$i) {
