@@ -58,7 +58,6 @@ else {
 
 ?>
 
-<br/>          
 <a href="main.php">Return to main menu</a></p>
 </body> 
 

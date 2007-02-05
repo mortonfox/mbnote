@@ -55,7 +55,6 @@ else {
 
 ?>
 
-<br/>          
 <a href="psearch.php">Search again</a>
 <br/>          
 <a href="main.php">Return to main menu</a>

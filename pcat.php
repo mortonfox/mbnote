@@ -17,7 +17,7 @@ page_head("NB: Categories", "");
     }
 ?>
 </p>
-<p><br/><a href="main.php">Return to main menu</a><br/>&nbsp;<br/></p>
+<p><a href="main.php">Return to main menu</a><br/>&nbsp;<br/></p>
 </body>
 
 <?php

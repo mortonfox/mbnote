@@ -302,7 +302,7 @@ function view_note($notenum)
 <p><b>Content:</b><br/>     
 <?php print htmlspecialchars($note["content"]); ?></p>
 <p><b>Category:</b> <?php print check_category($note["category"]); ?></p>
-<p><br/>
+<p>
 <a href="editnote.php?notenum=<?php print $notenum; ?>">Edit</a><br/>
 <a href="pdel.php?notenum=<?php print $notenum; ?>">Delete</a><br/>
 <a href="main.php">Return to main menu</a><br/>
@@ -350,9 +350,8 @@ function edit_form($title, $subj, $cont, $cat, $notenum, $errormsg) {
 <p>Subject:<br/>
 <input name="subject" maxlength="<?php print MAXSUBJECT; ?>" emptyok="false" value="<?php print $subj; ?>"/></p>
 <p>Content:<br/>
-<textarea name="content" maxlength="<?php print MAXCONTENT; ?>" emptyok="true" cols="<?php print PAGEWIDTH; ?>" rows="3"><?php print $cont; ?></textarea></p>
-<!-- <input name="content" maxlength="255" emptyok="true" value="<?php print $cont; ?>"/></p> -->
-<p>Category:<br/>
+<textarea name="content" maxlength="<?php print MAXCONTENT; ?>" emptyok="true" cols="<?php print PAGEWIDTH; ?>" rows="1"><?php print $cont; ?></textarea></p>
+<p>Category:
 <select name="category">
 
 <?php
@@ -372,7 +371,7 @@ function edit_form($title, $subj, $cont, $cat, $notenum, $errormsg) {
 	print "<input type=\"hidden\" name=\"notenum\" value=\"$notenum\"/>";
 ?>
 </p>
-<p><br/><input type="submit" value="Save note"/></p>
+<p><input type="submit" value="Save note"/></p>
 </form>
 <p><a href="<?php print ($notenum >= 0) ? "viewnote.php?notenum=$notenum" : "main.php"; ?>">Cancel</a></p>
 </body> 
