@@ -97,7 +97,7 @@ function page_login() {
 <p><b>Notebook: Login</b></p>
 <form action="login.php" method="post">
 <p>User ID:<br/>
-<input name="userid"/></p>
+<input type="hidden" name="userid" value="g"/></p>
 <p>Password:<br/>
 <input type="password" name="password"/></p>
 <p><input accesskey="#" type="submit" value="# Login"/></p>
